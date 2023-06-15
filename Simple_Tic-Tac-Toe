@@ -1,0 +1,196 @@
+package tictactoe;
+
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        // write your code here
+        Scanner scanner = new Scanner(System.in);
+        String[][] gameGrid = new String[3][3];
+        fillGameGrid(gameGrid);
+        printGameGrid(gameGrid);
+        userInput(scanner, gameGrid);
+        // if(!checkGameWin(gameGrid)){
+        //    userInput(scanner, gameGrid);
+        // }
+    }
+
+    private static void userInput (Scanner scanner,String[][] gameGrid) {
+
+            while (!checkGameWin(gameGrid)) {
+                try {
+                int a = scanner.nextInt() - 1;
+                int b = scanner.nextInt() - 1;
+                if (a < 3 && b < 3) {
+                    if (checkIfCanPost(a, b, gameGrid)) {
+                        post(gameGrid, a, b);
+                        printGameGrid(gameGrid);
+                    } else {
+                        System.out.println("This cell is occupied! Choose another one!");
+                    }
+                } else if (a >= 3 || b >= 3) {
+                    System.out.println("Coordinates should be from 1 to 3!");
+                }
+            } catch(Exception InputMismatchException){
+                    System.out.println("You should enter numbers!");
+                    String c = scanner.next();
+                }
+        }
+
+    }
+
+
+    private static void post(String[][] gameGrid, int a, int b) {
+        int countX = 0;
+        int countO = 0;
+        for (String[] i : gameGrid) {
+            for (String j: i) {
+                if (j.equals("X")) {
+                    countX++;
+                } else if (j.equals("O")) {
+                    countO++;
+                }
+            }
+        }
+        if (countO < countX) {
+            gameGrid[a][b] = "O";
+        } else {
+            gameGrid[a][b] = "X";
+        }
+
+    }
+
+    private static boolean checkIfCanPost(int a, int b, String[][] gameGrid) {
+        return gameGrid[a][b].equals("_");
+    }
+
+    private static boolean checkGameWin(String[][] gameGrid) {
+        boolean check = false;
+        if (checkPossible(gameGrid)) {
+            if (checkEmpty(gameGrid)) {
+                if (checkX(gameGrid) && checkO(gameGrid)) {
+                    System.out.println("Impossible");
+                    check = true;
+                } else if (checkO(gameGrid)) {
+                    System.out.println("O wins");
+                    check = true;
+                } else if (checkX(gameGrid)) {
+                    System.out.println("X wins");
+                    check = true;
+                }  // else if (!checkX(gameGrid) && !checkO(gameGrid)) {
+                   // System.out.println("Game not finished");
+                // }
+            } else if (!checkEmpty(gameGrid) && !checkX(gameGrid) && !checkO(gameGrid)) {
+                System.out.println("Draw");
+                check = true;
+            } else if (checkO(gameGrid)) {
+                System.out.println("O wins");
+                check = true;
+            } else if (checkX(gameGrid)) {
+                System.out.println("X wins");
+                check = true;
+            }
+        } else {
+            System.out.println("Impossible");
+            check = true;
+        }
+        return check;
+    }
+
+    private static boolean checkEmpty(String[][] gameGrid) {
+        boolean isEmpty = false;
+        for (String[] i : gameGrid) {
+            for (String j : i) {
+                if (j.equals("_")) {
+                    isEmpty = true;
+                }
+            }
+        }
+        return isEmpty;
+    }
+
+    private static boolean checkPossible(String[][] gameGrid) {
+        boolean isPossible = true;
+        int countX = 0;
+        int countO = 0;
+        for (String[] i : gameGrid) {
+            for (String j: i) {
+                if (j.equals("X")) {
+                    countX++;
+                } else if (j.equals("O")) {
+                    countO++;
+                }
+            }
+        }
+        if (countO > countX) {
+            isPossible = countO == (countX + 1);
+        } else if (countX > countO) {
+            isPossible = countX == (countO + 1);
+        }
+        return  isPossible;
+    }
+
+    private static boolean checkO(String[][] gameGrid) {
+        boolean isWinO = false;
+        if (gameGrid[0][0].equals("O") && gameGrid[0][1].equals("O") && gameGrid[0][2].equals("O")) {
+            isWinO = true;
+        } else if (gameGrid[1][0].equals("O") && gameGrid[1][1].equals("O") && gameGrid[1][2].equals("O")) {
+            isWinO = true;
+        } else if (gameGrid[2][0].equals("O") && gameGrid[2][1].equals("O") && gameGrid[2][2].equals("O")) {
+            isWinO = true;
+        } else if (gameGrid[0][0].equals("O") && gameGrid[1][0].equals("O") && gameGrid[2][0].equals("O")) {
+            isWinO = true;
+        } else if (gameGrid[0][1].equals("O") && gameGrid[1][1].equals("O") && gameGrid[2][1].equals("O")) {
+            isWinO = true;
+        } else if (gameGrid[0][2].equals("O") && gameGrid[1][2].equals("O") && gameGrid[2][2].equals("O")) {
+            isWinO = true;
+        } else if (gameGrid[0][0].equals("O") && gameGrid[1][1].equals("O") && gameGrid[2][2].equals("O")) {
+            isWinO = true;
+        } else if (gameGrid[0][2].equals("O") && gameGrid[1][1].equals("O") && gameGrid[2][0].equals("O")) {
+            isWinO = true;
+        }
+        return isWinO;
+    }
+
+    private static boolean checkX(String[][] gameGrid) {
+        boolean isWinX = false;
+        if (gameGrid[0][0].equals("X") && gameGrid[0][1].equals("X") && gameGrid[0][2].equals("X")) {
+            isWinX = true;
+        } else if (gameGrid[1][0].equals("X") && gameGrid[1][1].equals("X") && gameGrid[1][2].equals("X")) {
+            isWinX = true;
+        } else if (gameGrid[2][0].equals("X") && gameGrid[2][1].equals("X") && gameGrid[2][2].equals("X")) {
+            isWinX = true;
+        } else if (gameGrid[0][0].equals("X") && gameGrid[1][0].equals("X") && gameGrid[2][0].equals("X")) {
+            isWinX = true;
+        } else if (gameGrid[0][1].equals("X") && gameGrid[1][1].equals("X") && gameGrid[2][1].equals("X")) {
+            isWinX = true;
+        } else if (gameGrid[0][2].equals("X") && gameGrid[1][2].equals("X") && gameGrid[2][2].equals("X")) {
+            isWinX = true;
+        } else if (gameGrid[0][0].equals("X") && gameGrid[1][1].equals("X") && gameGrid[2][2].equals("X")) {
+            isWinX = true;
+        } else if (gameGrid[0][2].equals("X") && gameGrid[1][1].equals("X") && gameGrid[2][0].equals("X")) {
+            isWinX = true;
+        }
+        return isWinX;
+    }
+
+    private static void printGameGrid(String[][] gameGrid) {
+        System.out.println("---------");
+        for (int i = 0; i < gameGrid.length; i++) {
+            System.out.print("|");
+            for (int j = 0; j < gameGrid[0].length; j++) {
+                System.out.print(" " + gameGrid[i][j]);
+            }
+            System.out.println(" |");
+        }
+        System.out.println("---------");
+    }
+
+    private static void fillGameGrid(String[][] gameGridInput) {
+        for (String[] strings : gameGridInput) {
+            Arrays.fill(strings, "_");
+        }
+    }
+}
